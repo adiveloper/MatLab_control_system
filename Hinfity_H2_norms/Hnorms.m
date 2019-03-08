@@ -17,8 +17,18 @@ function [r , g2] = Hnorms(A,B,C,D)
   end
 end
   
-  P = B*B';
-  Lc = lyap(A,P);
-  g2 = sqrt(trace(C*Lc*C'));
+  G = ss(A,B,C,D)
+  [GS,GNS]=stabsep(G)
+  
+  
+  GSP = GS.B*(GS.B)';
+  GSL = lyap(GS.A,GSP);
+  GSnorm = trace(GS.C*GSL*GS.C');
+  
+  GNSP = GNS.B*(GNS.B)';
+  GNSL = lyap(-GNS.A,GNSP);
+  GNSnorm = trace(GNS.C*GNSL*GNS.C');
+  
+  g2 = sqrt(GSnorm + GNSnorm);
 
 endfunction
